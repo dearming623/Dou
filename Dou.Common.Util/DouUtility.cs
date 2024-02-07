@@ -1,9 +1,27 @@
-﻿using System;
+﻿#region <<Notes>>
+/*----------------------------------------------------------------
+ * Copy right (c) 2024  All rights reserved
+ * CLR Ver: 4.0.30319.42000
+ * Computer: MOLEQ-MING
+ * Company: 
+ * namespace: Dou.Common.Util
+ * Unique: eec7a2ae-9d54-4394-968f-c0178098756d
+ * File name: DouUtility
+ * Domain: MOLEQ-MING
+ * 
+ * @author: Ming
+ * @email: t8ming@live.com
+ * @date: 2/7/2024 18:57:47
+ *----------------------------------------------------------------*/
+#endregion <<Notes>>
+
+using Dou.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DouNamespace
+namespace Dou.Common.Util
 {
     public static class DouUtility
     {

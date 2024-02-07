@@ -9,6 +9,9 @@ namespace DouNamespace
 {
     public class StarList
     {
+
+        public static StarList Instance { get; } = new StarList();
+
         public static List<Star> doustars;
 
         public static void Load()
@@ -27,7 +30,7 @@ namespace DouNamespace
                     Star newStar = new Star();
                     newStar.ID = Convert.ToInt32(element.Attributes["id"].Value);
                     newStar.Name = element.Attributes["name"].Value;
-                    newStar.type =Convert.ToInt32( element.Attributes["type"].Value);
+                    newStar.type = Convert.ToInt32(element.Attributes["type"].Value);
                     newStar.position = Convert.ToInt32(element.Attributes["position"].Value);
                     newStar.Level = 0;
                     doustars.Add(newStar);
@@ -44,7 +47,7 @@ namespace DouNamespace
         {
             Star result = null;
 
-            foreach (Star s in doustars)
+            foreach (Star s in GetDouStars())
             {
                 if (s.ID == id)
                 {
@@ -53,6 +56,11 @@ namespace DouNamespace
                 }
             }
             return result;
+        }
+
+        public static List<Star> GetDouStars()
+        {
+            return doustars;
         }
 
 

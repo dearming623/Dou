@@ -74,7 +74,6 @@
     <Compile Include="DAL\UserDAL.cs" />
     <Compile Include="DBUtility\DbHelperSQLite.cs" />
     <Compile Include="DouSource.cs" />
-    <Compile Include="DouUtility.cs" />
     <Compile Include="frmDouApp.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,8 +185,21 @@
     <Content Include="Data\dou.accdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="doustars.xml" />
+    <Content Include="doustars.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Snapshoot\snapshoot1.png" />
     <Content Include="users.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dou.Common.Enums\Dou.Common.Enums.csproj">
+      <Project>{02257e11-e00b-422d-9756-eb310a092982}</Project>
+      <Name>Dou.Common.Enums</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dou.Common.Util\Dou.Common.Util.csproj">
+      <Project>{d4de72e0-5d37-447e-8c70-41126a4c7c85}</Project>
+      <Name>Dou.Common.Util</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
