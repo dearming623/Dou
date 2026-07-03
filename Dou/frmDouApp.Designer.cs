@@ -32,10 +32,14 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("亲戚");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("好有");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("好友");
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("同事");
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("关注");
             System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("全部", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2,
+            treeNode3,
+            treeNode4,
             treeNode1,
             treeNode2,
             treeNode3,
@@ -76,12 +80,10 @@
             this.Column5 = new System.Windows.Forms.DataGridViewButtonColumn();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.bodyDou = new DouNamespace.ucLifeDou();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnGoForLiuYear = new System.Windows.Forms.Button();
             this.cbLiuYear = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.ucDouYear = new DouNamespace.ucLifeDou();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
             this.label18 = new System.Windows.Forms.Label();
@@ -114,6 +116,8 @@
             this.delUserToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.bodyDou = new DouNamespace.ucLifeDou();
+            this.ucDouYear = new DouNamespace.ucLifeDou();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNewMinte)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudNewHour)).BeginInit();
@@ -133,7 +137,7 @@
             this.cbNewYear.FormattingEnabled = true;
             this.cbNewYear.Location = new System.Drawing.Point(6, 19);
             this.cbNewYear.Name = "cbNewYear";
-            this.cbNewYear.Size = new System.Drawing.Size(68, 21);
+            this.cbNewYear.Size = new System.Drawing.Size(68, 20);
             this.cbNewYear.TabIndex = 14;
             this.cbNewYear.SelectedIndexChanged += new System.EventHandler(this.cbYear0_SelectedIndexChanged);
             // 
@@ -161,7 +165,7 @@
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(146, 49);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(19, 13);
+            this.label12.Size = new System.Drawing.Size(17, 12);
             this.label12.TabIndex = 29;
             this.label12.Text = "分";
             // 
@@ -170,7 +174,7 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(80, 49);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(19, 13);
+            this.label11.Size = new System.Drawing.Size(17, 12);
             this.label11.TabIndex = 22;
             this.label11.Text = "时";
             // 
@@ -179,7 +183,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(215, 22);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(19, 13);
+            this.label3.Size = new System.Drawing.Size(17, 12);
             this.label3.TabIndex = 19;
             this.label3.Text = "日";
             // 
@@ -192,7 +196,7 @@
             0,
             0});
             this.nudNewMinte.Name = "nudNewMinte";
-            this.nudNewMinte.Size = new System.Drawing.Size(40, 20);
+            this.nudNewMinte.Size = new System.Drawing.Size(40, 21);
             this.nudNewMinte.TabIndex = 28;
             // 
             // cbNewDay
@@ -200,7 +204,7 @@
             this.cbNewDay.FormattingEnabled = true;
             this.cbNewDay.Location = new System.Drawing.Point(169, 18);
             this.cbNewDay.Name = "cbNewDay";
-            this.cbNewDay.Size = new System.Drawing.Size(40, 21);
+            this.cbNewDay.Size = new System.Drawing.Size(40, 20);
             this.cbNewDay.TabIndex = 18;
             this.cbNewDay.SelectedIndexChanged += new System.EventHandler(this.cbDay0_SelectedIndexChanged);
             // 
@@ -213,7 +217,7 @@
             0,
             0});
             this.nudNewHour.Name = "nudNewHour";
-            this.nudNewHour.Size = new System.Drawing.Size(40, 20);
+            this.nudNewHour.Size = new System.Drawing.Size(40, 21);
             this.nudNewHour.TabIndex = 27;
             this.nudNewHour.ValueChanged += new System.EventHandler(this.nudHour_ValueChanged);
             // 
@@ -222,7 +226,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(146, 22);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(19, 13);
+            this.label2.Size = new System.Drawing.Size(17, 12);
             this.label2.TabIndex = 17;
             this.label2.Text = "月";
             // 
@@ -231,7 +235,7 @@
             this.cbNewMonth.FormattingEnabled = true;
             this.cbNewMonth.Location = new System.Drawing.Point(100, 18);
             this.cbNewMonth.Name = "cbNewMonth";
-            this.cbNewMonth.Size = new System.Drawing.Size(40, 21);
+            this.cbNewMonth.Size = new System.Drawing.Size(40, 20);
             this.cbNewMonth.TabIndex = 16;
             this.cbNewMonth.SelectedIndexChanged += new System.EventHandler(this.cbMonth0_SelectedIndexChanged);
             // 
@@ -240,7 +244,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(81, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(19, 13);
+            this.label1.Size = new System.Drawing.Size(17, 12);
             this.label1.TabIndex = 15;
             this.label1.Text = "年";
             // 
@@ -249,7 +253,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(845, 102);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(34, 13);
+            this.label9.Size = new System.Drawing.Size(35, 12);
             this.label9.TabIndex = 23;
             this.label9.Text = "姓名:";
             // 
@@ -257,7 +261,7 @@
             // 
             this.tbName.Location = new System.Drawing.Point(887, 98);
             this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(98, 20);
+            this.tbName.Size = new System.Drawing.Size(98, 21);
             this.tbName.TabIndex = 24;
             // 
             // label10
@@ -265,7 +269,7 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(995, 102);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(34, 13);
+            this.label10.Size = new System.Drawing.Size(35, 12);
             this.label10.TabIndex = 25;
             this.label10.Text = "性别:";
             // 
@@ -274,7 +278,7 @@
             this.cbSex.FormattingEnabled = true;
             this.cbSex.Location = new System.Drawing.Point(1031, 99);
             this.cbSex.Name = "cbSex";
-            this.cbSex.Size = new System.Drawing.Size(46, 21);
+            this.cbSex.Size = new System.Drawing.Size(46, 20);
             this.cbSex.TabIndex = 26;
             // 
             // cbUsers
@@ -282,7 +286,7 @@
             this.cbUsers.FormattingEnabled = true;
             this.cbUsers.Location = new System.Drawing.Point(910, 55);
             this.cbUsers.Name = "cbUsers";
-            this.cbUsers.Size = new System.Drawing.Size(167, 21);
+            this.cbUsers.Size = new System.Drawing.Size(167, 20);
             this.cbUsers.TabIndex = 30;
             this.cbUsers.SelectedIndexChanged += new System.EventHandler(this.cbUsers_SelectedIndexChanged);
             // 
@@ -301,7 +305,7 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(845, 58);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(58, 13);
+            this.label15.Size = new System.Drawing.Size(59, 12);
             this.label15.TabIndex = 32;
             this.label15.Text = "用户记录:";
             // 
@@ -348,7 +352,7 @@
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(384, 12);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(67, 13);
+            this.label16.Size = new System.Drawing.Size(65, 12);
             this.label16.TabIndex = 10;
             this.label16.Text = "查询条件：";
             // 
@@ -360,13 +364,15 @@
             this.button3.TabIndex = 6;
             this.button3.Text = "查找";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(543, 7);
+            this.textBox1.Location = new System.Drawing.Point(542, 8);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(183, 20);
+            this.textBox1.Size = new System.Drawing.Size(183, 21);
             this.textBox1.TabIndex = 5;
+            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // comboBox3
             // 
@@ -375,9 +381,9 @@
             "姓名",
             "命宫",
             "夫妻"});
-            this.comboBox3.Location = new System.Drawing.Point(455, 7);
+            this.comboBox3.Location = new System.Drawing.Point(455, 8);
             this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(81, 21);
+            this.comboBox3.Size = new System.Drawing.Size(81, 20);
             this.comboBox3.TabIndex = 4;
             // 
             // dgvUserInfoList
@@ -411,7 +417,9 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvUserInfoList.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvUserInfoList.Location = new System.Drawing.Point(165, 34);
+            this.dgvUserInfoList.MultiSelect = false;
             this.dgvUserInfoList.Name = "dgvUserInfoList";
+            this.dgvUserInfoList.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -421,55 +429,68 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvUserInfoList.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvUserInfoList.RowTemplate.Height = 23;
+            this.dgvUserInfoList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvUserInfoList.Size = new System.Drawing.Size(642, 632);
             this.dgvUserInfoList.TabIndex = 3;
+            this.dgvUserInfoList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUserInfoList_CellContentClick);
+            this.dgvUserInfoList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUserInfoList_CellDoubleClick);
+            this.dgvUserInfoList.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvUserInfoList_CellFormatting);
             // 
             // id
             // 
-            this.id.DataPropertyName = "id";
+            this.id.DataPropertyName = "Id";
             this.id.HeaderText = "ID";
             this.id.Name = "id";
+            this.id.ReadOnly = true;
             this.id.Width = 30;
             // 
             // name
             // 
-            this.name.DataPropertyName = "name";
+            this.name.DataPropertyName = "Name";
             this.name.HeaderText = "姓名";
             this.name.Name = "name";
+            this.name.ReadOnly = true;
             // 
             // sex
             // 
             this.sex.DataPropertyName = "Sex";
             this.sex.HeaderText = "性别";
             this.sex.Name = "sex";
+            this.sex.ReadOnly = true;
             this.sex.Width = 40;
             // 
             // Column1
             // 
             this.Column1.HeaderText = "公历生日";
             this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
             this.Column1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
             // Column2
             // 
             this.Column2.HeaderText = "农历生日";
             this.Column2.Name = "Column2";
+            this.Column2.ReadOnly = true;
             // 
             // Column3
             // 
             this.Column3.HeaderText = "命宫";
             this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
             // 
             // Column4
             // 
             this.Column4.HeaderText = "夫妻宫";
             this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
             // 
             // Column5
             // 
             this.Column5.HeaderText = "操作";
             this.Column5.Name = "Column5";
-            this.Column5.Text = "";
+            this.Column5.ReadOnly = true;
+            this.Column5.Text = "编辑";
+            this.Column5.UseColumnTextForButtonValue = true;
             // 
             // treeView1
             // 
@@ -478,7 +499,7 @@
             treeNode1.Name = "Node4";
             treeNode1.Text = "亲戚";
             treeNode2.Name = "Node1";
-            treeNode2.Text = "好有";
+            treeNode2.Text = "好友";
             treeNode3.Name = "Node2";
             treeNode3.Text = "同事";
             treeNode4.Name = "Node3";
@@ -489,6 +510,7 @@
             treeNode5});
             this.treeView1.Size = new System.Drawing.Size(156, 659);
             this.treeView1.TabIndex = 0;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // tabPage1
             // 
@@ -500,13 +522,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "命盘";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // bodyDou
-            // 
-            this.bodyDou.Location = new System.Drawing.Point(6, 34);
-            this.bodyDou.Name = "bodyDou";
-            this.bodyDou.Size = new System.Drawing.Size(812, 650);
-            this.bodyDou.TabIndex = 0;
             // 
             // tabPage2
             // 
@@ -537,7 +552,7 @@
             this.cbLiuYear.FormattingEnabled = true;
             this.cbLiuYear.Location = new System.Drawing.Point(51, 8);
             this.cbLiuYear.Name = "cbLiuYear";
-            this.cbLiuYear.Size = new System.Drawing.Size(121, 21);
+            this.cbLiuYear.Size = new System.Drawing.Size(121, 20);
             this.cbLiuYear.TabIndex = 33;
             // 
             // label4
@@ -545,16 +560,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(15, 12);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(34, 13);
+            this.label4.Size = new System.Drawing.Size(35, 12);
             this.label4.TabIndex = 27;
             this.label4.Text = "流年:";
-            // 
-            // ucDouYear
-            // 
-            this.ucDouYear.Location = new System.Drawing.Point(6, 31);
-            this.ucDouYear.Name = "ucDouYear";
-            this.ucDouYear.Size = new System.Drawing.Size(893, 715);
-            this.ucDouYear.TabIndex = 0;
             // 
             // tabPage3
             // 
@@ -585,7 +593,7 @@
             this.label18.AutoSize = true;
             this.label18.Location = new System.Drawing.Point(342, 14);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(19, 13);
+            this.label18.Size = new System.Drawing.Size(17, 12);
             this.label18.TabIndex = 34;
             this.label18.Text = "月";
             // 
@@ -594,7 +602,7 @@
             this.label17.AutoSize = true;
             this.label17.Location = new System.Drawing.Point(187, 14);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(19, 13);
+            this.label17.Size = new System.Drawing.Size(17, 12);
             this.label17.TabIndex = 33;
             this.label17.Text = "年";
             // 
@@ -603,7 +611,7 @@
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(20, 13);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(34, 13);
+            this.label13.Size = new System.Drawing.Size(35, 12);
             this.label13.TabIndex = 29;
             this.label13.Text = "流月:";
             // 
@@ -612,7 +620,7 @@
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Location = new System.Drawing.Point(215, 10);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(121, 21);
+            this.comboBox2.Size = new System.Drawing.Size(121, 20);
             this.comboBox2.TabIndex = 32;
             // 
             // comboBox1
@@ -620,7 +628,7 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(60, 10);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.Size = new System.Drawing.Size(121, 20);
             this.comboBox1.TabIndex = 31;
             // 
             // tabPage4
@@ -650,7 +658,7 @@
             this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dateTimePicker1.Location = new System.Drawing.Point(53, 9);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 21);
             this.dateTimePicker1.TabIndex = 36;
             // 
             // label14
@@ -658,7 +666,7 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(12, 13);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(34, 13);
+            this.label14.Size = new System.Drawing.Size(35, 12);
             this.label14.TabIndex = 30;
             this.label14.Text = "流日:";
             // 
@@ -677,7 +685,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(81, 22);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(19, 13);
+            this.label8.Size = new System.Drawing.Size(17, 12);
             this.label8.TabIndex = 15;
             this.label8.Text = "年";
             // 
@@ -686,7 +694,7 @@
             this.cbMonth.FormattingEnabled = true;
             this.cbMonth.Location = new System.Drawing.Point(100, 18);
             this.cbMonth.Name = "cbMonth";
-            this.cbMonth.Size = new System.Drawing.Size(40, 21);
+            this.cbMonth.Size = new System.Drawing.Size(40, 20);
             this.cbMonth.TabIndex = 16;
             // 
             // label7
@@ -694,7 +702,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(146, 22);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(19, 13);
+            this.label7.Size = new System.Drawing.Size(17, 12);
             this.label7.TabIndex = 17;
             this.label7.Text = "月";
             // 
@@ -703,7 +711,7 @@
             this.cbDay.FormattingEnabled = true;
             this.cbDay.Location = new System.Drawing.Point(169, 18);
             this.cbDay.Name = "cbDay";
-            this.cbDay.Size = new System.Drawing.Size(40, 21);
+            this.cbDay.Size = new System.Drawing.Size(40, 20);
             this.cbDay.TabIndex = 18;
             // 
             // label6
@@ -711,7 +719,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(215, 22);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(19, 13);
+            this.label6.Size = new System.Drawing.Size(17, 12);
             this.label6.TabIndex = 19;
             this.label6.Text = "日";
             // 
@@ -720,7 +728,7 @@
             this.cbHour.FormattingEnabled = true;
             this.cbHour.Location = new System.Drawing.Point(6, 45);
             this.cbHour.Name = "cbHour";
-            this.cbHour.Size = new System.Drawing.Size(130, 21);
+            this.cbHour.Size = new System.Drawing.Size(130, 20);
             this.cbHour.TabIndex = 20;
             // 
             // cbYesrSky
@@ -728,7 +736,7 @@
             this.cbYesrSky.FormattingEnabled = true;
             this.cbYesrSky.Location = new System.Drawing.Point(6, 18);
             this.cbYesrSky.Name = "cbYesrSky";
-            this.cbYesrSky.Size = new System.Drawing.Size(34, 21);
+            this.cbYesrSky.Size = new System.Drawing.Size(34, 20);
             this.cbYesrSky.TabIndex = 34;
             // 
             // label5
@@ -736,7 +744,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(142, 48);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(19, 13);
+            this.label5.Size = new System.Drawing.Size(17, 12);
             this.label5.TabIndex = 21;
             this.label5.Text = "时";
             // 
@@ -745,7 +753,7 @@
             this.cbYearEarth.FormattingEnabled = true;
             this.cbYearEarth.Location = new System.Drawing.Point(40, 18);
             this.cbYearEarth.Name = "cbYearEarth";
-            this.cbYearEarth.Size = new System.Drawing.Size(34, 21);
+            this.cbYearEarth.Size = new System.Drawing.Size(34, 20);
             this.cbYearEarth.TabIndex = 35;
             // 
             // groupBox2
@@ -792,6 +800,7 @@
             this.打开ToolStripMenuItem.Name = "打开ToolStripMenuItem";
             this.打开ToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.打开ToolStripMenuItem.Text = "打开";
+            this.打开ToolStripMenuItem.Click += new System.EventHandler(this.打开ToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -807,27 +816,27 @@
             this.modifyUserToolStripMenuItem,
             this.delUserToolStripMenuItem1});
             this.userMgrToolStripMenuItem.Name = "userMgrToolStripMenuItem";
-            this.userMgrToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.userMgrToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.userMgrToolStripMenuItem.Text = "用户管理";
             // 
             // addUserToolStripMenuItem
             // 
             this.addUserToolStripMenuItem.Name = "addUserToolStripMenuItem";
-            this.addUserToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.addUserToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.addUserToolStripMenuItem.Text = "添加用户";
             this.addUserToolStripMenuItem.Click += new System.EventHandler(this.addUserToolStripMenuItem_Click);
             // 
             // modifyUserToolStripMenuItem
             // 
             this.modifyUserToolStripMenuItem.Name = "modifyUserToolStripMenuItem";
-            this.modifyUserToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.modifyUserToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.modifyUserToolStripMenuItem.Text = "修改用户";
             this.modifyUserToolStripMenuItem.Click += new System.EventHandler(this.modifyUserToolStripMenuItem_Click);
             // 
             // delUserToolStripMenuItem1
             // 
             this.delUserToolStripMenuItem1.Name = "delUserToolStripMenuItem1";
-            this.delUserToolStripMenuItem1.Size = new System.Drawing.Size(122, 22);
+            this.delUserToolStripMenuItem1.Size = new System.Drawing.Size(124, 22);
             this.delUserToolStripMenuItem1.Text = "删除用户";
             this.delUserToolStripMenuItem1.Click += new System.EventHandler(this.delUserToolStripMenuItem1_Click);
             // 
@@ -845,6 +854,20 @@
             this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(98, 22);
             this.aboutToolStripMenuItem1.Text = "关于";
             this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
+            // 
+            // bodyDou
+            // 
+            this.bodyDou.Location = new System.Drawing.Point(6, 34);
+            this.bodyDou.Name = "bodyDou";
+            this.bodyDou.Size = new System.Drawing.Size(812, 650);
+            this.bodyDou.TabIndex = 0;
+            // 
+            // ucDouYear
+            // 
+            this.ucDouYear.Location = new System.Drawing.Point(6, 31);
+            this.ucDouYear.Name = "ucDouYear";
+            this.ucDouYear.Size = new System.Drawing.Size(893, 715);
+            this.ucDouYear.TabIndex = 0;
             // 
             // frmDouApp
             // 
@@ -963,6 +986,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnGroup;
         private System.Windows.Forms.DataGridViewButtonColumn Column5;
         private ucLifeDou bodyDou;
   

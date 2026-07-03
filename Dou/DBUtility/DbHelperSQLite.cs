@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Data.SQLite;
 using System.Data;
+using System.IO;
 
 namespace DouNamespace.DBUtility
 {
     public abstract class DbHelperSQLite
     {
+        public static string DbFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Dou.db");
 
-        public static string connectionString = "Data Source=Dou.db;Pooling=true;FailIfMissing=false";
+        public static string connectionString = "Data Source=" + DbFilePath + ";Pooling=true;FailIfMissing=false";
 
         public static bool Exists(string strSql)
         {
@@ -24,14 +26,7 @@ namespace DouNamespace.DBUtility
             {
                 cmdresult = int.Parse(obj.ToString());
             }
-            if (cmdresult == 0)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return cmdresult != 0;
         }
 
         public static bool Exists(string strSql, params SQLiteParameter[] cmdParms)
@@ -46,17 +41,8 @@ namespace DouNamespace.DBUtility
             {
                 cmdresult = int.Parse(obj.ToString());
             }
-            if (cmdresult == 0)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return cmdresult != 0;
         }
-
-
 
         private static void PrepareCommand(SQLiteCommand cmd, SQLiteConnection conn, SQLiteTransaction trans, string cmdText, SQLiteParameter[] cmdParms)
         {
@@ -66,7 +52,7 @@ namespace DouNamespace.DBUtility
             cmd.CommandText = cmdText;
             if (trans != null)
                 cmd.Transaction = trans;
-            cmd.CommandType = CommandType.Text;//cmdType;
+            cmd.CommandType = CommandType.Text;
             if (cmdParms != null)
             {
                 foreach (SQLiteParameter parameter in cmdParms)
@@ -81,40 +67,39 @@ namespace DouNamespace.DBUtility
             }
         }
 
-
         /// <summary>
-        /// 执行一条计算查询结果语句，返回查询结果（object）。
+        /// 执行SQL语句（增删改），返回受影响的行数。
         /// </summary>
-        /// <param name="SQLString">计算查询结果语句</param>
-        /// <returns>查询结果（object）</returns>
-        public static object GetSingle(string SQLString)
+        public static int ExecuteSql(string SQLString, params SQLiteParameter[] cmdParms)
         {
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
-                using (SQLiteCommand cmd = new SQLiteCommand(SQLString, connection))
+                using (SQLiteCommand cmd = new SQLiteCommand())
                 {
-                    try
+                    PrepareCommand(cmd, connection, null, SQLString, cmdParms);
+                    int rows = cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+                    return rows;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 执行查询语句，返回DataSet。
+        /// </summary>
+        public static DataSet Query(string SQLString, params SQLiteParameter[] cmdParms)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                using (SQLiteCommand cmd = new SQLiteCommand())
+                {
+                    PrepareCommand(cmd, connection, null, SQLString, cmdParms);
+                    using (SQLiteDataAdapter da = new SQLiteDataAdapter(cmd))
                     {
-                        connection.Open();
-                        object obj = cmd.ExecuteScalar();
-                        if ((Object.Equals(obj, null)) || (Object.Equals(obj, System.DBNull.Value)))
-                        {
-                            return null;
-                        }
-                        else
-                        {
-                            return obj;
-                        }
-                    }
-                    catch (SQLiteException e)
-                    {
-                        connection.Close();
-                        throw e;
-                    }
-                    finally
-                    {
-                        cmd.Dispose();
-                        connection.Close();
+                        DataSet ds = new DataSet();
+                        da.Fill(ds, "ds");
+                        cmd.Parameters.Clear();
+                        return ds;
                     }
                 }
             }
@@ -123,41 +108,30 @@ namespace DouNamespace.DBUtility
         /// <summary>
         /// 执行一条计算查询结果语句，返回查询结果（object）。
         /// </summary>
-        /// <param name="SQLString">计算查询结果语句</param>
-        /// <returns>查询结果（object）</returns>
+        public static object GetSingle(string SQLString)
+        {
+            return GetSingle(SQLString, (SQLiteParameter[])null);
+        }
+
+        /// <summary>
+        /// 执行一条计算查询结果语句，返回查询结果（object）。
+        /// </summary>
         public static object GetSingle(string SQLString, params SQLiteParameter[] cmdParms)
         {
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
                 using (SQLiteCommand cmd = new SQLiteCommand())
                 {
-                    try
+                    PrepareCommand(cmd, connection, null, SQLString, cmdParms);
+                    object obj = cmd.ExecuteScalar();
+                    cmd.Parameters.Clear();
+                    if ((Object.Equals(obj, null)) || (Object.Equals(obj, System.DBNull.Value)))
                     {
-                        PrepareCommand(cmd, connection, null, SQLString, cmdParms);
-                        object obj = cmd.ExecuteScalar();
-                        cmd.Parameters.Clear();
-                        if ((Object.Equals(obj, null)) || (Object.Equals(obj, System.DBNull.Value)))
-                        {
-                            return null;
-                        }
-                        else
-                        {
-                            return obj;
-                        }
+                        return null;
                     }
-                    catch (SQLiteException e)
-                    {
-                        throw e;
-                    }
-                    finally
-                    {
-                        cmd.Dispose();
-                        connection.Close();
-                    }
+                    return obj;
                 }
             }
         }
     }
-
-
 }

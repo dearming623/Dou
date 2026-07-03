@@ -63,5 +63,53 @@ namespace DouNamespace
             get { return minute; }
             set { minute = value; }
         }
+
+        private string phone;
+
+        public string Phone
+        {
+            get { return phone; }
+            set { phone = value; }
+        }
+
+        private string mobile;
+
+        public string Mobile
+        {
+            get { return mobile; }
+            set { mobile = value; }
+        }
+
+        private string email;
+
+        public string Email
+        {
+            get { return email; }
+            set { email = value; }
+        }
+
+        private string qq;
+
+        public string QQ
+        {
+            get { return qq; }
+            set { qq = value; }
+        }
+
+        private string notes;
+
+        public string Notes
+        {
+            get { return notes; }
+            set { notes = value; }
+        }
+
+        private string group;
+
+        public string Group
+        {
+            get { return group; }
+            set { group = value; }
+        }
     }
 }

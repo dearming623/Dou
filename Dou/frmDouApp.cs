@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Data.SQLite;
 using Dou.Common.Util;
 
 namespace DouNamespace
@@ -18,25 +17,20 @@ namespace DouNamespace
         private User usr = null;
         Plate p = new Plate();
 
+        private string _filterGroup = "全部";
+        private string _searchKeyword = string.Empty;
+        private string _searchField = "姓名";
+
         public frmDouApp()
         {
             InitializeComponent();
         }
 
-
-
         private void btnGo_Click(object sender, EventArgs e)
         {
-
-           
-            //DouManager dm = new DouManager();
-            //dm.CreatePlate(1983,5,13,5,1,1,"Ming","Deng");
-
-            //MessageBox.Show(DouUtility.DeasilCountZone(0, 3).ToString());
             StarList.Load();
 
             p = new Plate();
-           // p.LiuYear = Convert.ToInt32(this.cbLiuYear.SelectedItem);
             ChineseCalendar cc = new ChineseCalendar();
             p.LiuYearSky = cc.GetYearSky(Convert.ToInt32(this.cbLiuYear.SelectedItem));
 
@@ -47,12 +41,8 @@ namespace DouNamespace
             p.hour = cbHour.SelectedIndex;
             p.Sex = cbSex.SelectedIndex;
             p.Type = 0;
-            p.first_name = "";
+            p.first_name = tbName.Text;
             p.CreatePlate();
-
-            
-            //p.CreatePlate(cbYesrSky.SelectedIndex, cbYearEarth.SelectedIndex, cbMonth.SelectedIndex, cbDay.SelectedIndex, cbHour.SelectedIndex, cbSex.SelectedIndex, 0, tbName.Text, "");
-            
 
             this.bodyDou.LoadInfo(p);
             this.bodyDou.DisplayBodyPlate();
@@ -61,57 +51,37 @@ namespace DouNamespace
             this.ucDouYear.DisplayBodyPlate();
 
             tabControl1.SelectedTab = tabPage1;
-
         }
-
-      
 
         private void FrmDou_Load(object sender, EventArgs e)
         {
-            int i, j, k;
+            StarList.Load();
 
-            List<User> userlist = UserList.FindAll();
-
-            dgvUserInfoList.DataSource = userlist;
-
-            for ( i = 0; i < userlist.Count; i++)
-            {
-                //
-            }
-
+            int i;
 
             cc = new ChineseCalendar(dt);
 
-            //性别
             for (i = 0; i < DouSource.SEX.Length; i++)
             {
                 cbSex.Items.Add(DouSource.SEX[i]);
             }
 
-           // LoadSex();
-
-            //公历年
             for (i = 0; i < 145; i++)
             {
                 cbNewYear.Items.Add(1901 + i);
                 cbLiuYear.Items.Add(1901 + i);
             }
 
-       
-
-            //公历月
             for (i = 0; i < 12; i++)
             {
                 cbNewMonth.Items.Add(i + 1);
             }
 
-            //公历日
             for (i = 0; i < 31; i++)
             {
                 cbNewDay.Items.Add(i + 1);
             }
 
-            //农历年
             for (i = 0; i < DouSource.SKY.Length; i++)
             {
                 cbYesrSky.Items.Add(DouSource.SKY[i]);
@@ -122,19 +92,16 @@ namespace DouNamespace
                 cbYearEarth.Items.Add(DouSource.EARTH[i]);
             }
 
-            //农历月
             for (i = 0; i < 12; i++)
             {
                 cbMonth.Items.Add(i + 1);
             }
 
-            //农历日
             for (i = 0; i < 31; i++)
             {
                 cbDay.Items.Add(i + 1);
             }
 
-            // 农历时辰
             string temp = "";
             for (i = 0; i < DouSource.HourContent.Length; i++)
             {
@@ -142,32 +109,110 @@ namespace DouNamespace
                 cbHour.Items.Add(temp);
             }
 
+            if (comboBox3.Items.Count > 0)
+                comboBox3.SelectedIndex = 0;
+
             InitNewCalendar();
             InitOldCalendar();
             InitLiu();
             DisplayChineseDate();
+            RefreshUserList();
+        }
+
+        private void RefreshUserList()
+        {
+            List<User> users = ApplyUserFilter(UserList.FindAll());
+            dgvUserInfoList.DataSource = null;
+            dgvUserInfoList.DataSource = users;
             LoadUserList();
         }
 
-        /// <summary>
-        /// 初始化流年
-        /// </summary>
+        private void EditUser(User user)
+        {
+            if (user == null) return;
+
+            frmUserInfo frmUserinfo = new frmUserInfo();
+            frmUserinfo.SetEditMode(user);
+            if (frmUserinfo.ShowDialog() == DialogResult.OK)
+            {
+                RefreshUserList();
+            }
+        }
+
+        private List<User> ApplyUserFilter(List<User> users)
+        {
+            IEnumerable<User> result = users;
+
+            if (_filterGroup != "全部" && !string.IsNullOrEmpty(_filterGroup))
+            {
+                result = result.Where(u => u.Group == _filterGroup);
+            }
+
+            if (!string.IsNullOrEmpty(_searchKeyword))
+            {
+                string kw = _searchKeyword.Trim();
+                if (_searchField == "姓名")
+                {
+                    result = result.Where(u =>
+                        u.Name != null &&
+                        u.Name.IndexOf(kw, StringComparison.OrdinalIgnoreCase) >= 0);
+                }
+                else if (_searchField == "命宫")
+                {
+                    result = result.Where(u =>
+                        UserPlateHelper.GetPalaceEarth(u, 0).IndexOf(kw, StringComparison.OrdinalIgnoreCase) >= 0);
+                }
+                else if (_searchField == "夫妻")
+                {
+                    result = result.Where(u =>
+                        UserPlateHelper.GetPalaceEarth(u, 2).IndexOf(kw, StringComparison.OrdinalIgnoreCase) >= 0);
+                }
+            }
+
+            return result.ToList();
+        }
+
+        private User GetSelectedUser()
+        {
+            if (dgvUserInfoList.CurrentRow != null)
+            {
+                User gridUser = dgvUserInfoList.CurrentRow.DataBoundItem as User;
+                if (gridUser != null) return gridUser;
+            }
+
+            if (cbUsers.Text != string.Empty)
+            {
+                return UserList.FindByName(cbUsers.Text);
+            }
+
+            return null;
+        }
+
+        private void ApplyUserToSidebar(User user)
+        {
+            if (user == null) return;
+
+            tbName.Text = user.Name;
+            if (user.Sex >= 0 && user.Sex < cbSex.Items.Count)
+                cbSex.SelectedIndex = user.Sex;
+            cbNewYear.Text = user.Year.ToString();
+            cbNewMonth.Text = user.Month.ToString();
+            cbNewDay.Text = user.Day.ToString();
+            nudNewHour.Value = user.Hour;
+            nudNewMinte.Value = user.Minute;
+            DisplayChineseDate();
+        }
+
         private void InitLiu()
         {
             if (this.cbLiuYear.Items.Count > 0) this.cbLiuYear.SelectedItem = dt.Year;
         }
 
-        /// <summary>
-        /// 加载用户到combox
-        /// </summary>
         private void LoadUserList()
         {
-            // 加载用户
             int i;
-            List<User> users = new List<User>();
+            List<User> users = UserList.FindAll();
             this.cbUsers.Items.Clear();
-
-            users = UserList.FindAll();
 
             for (i = 0; i < users.Count; i++)
             {
@@ -175,9 +220,6 @@ namespace DouNamespace
             }
         }
 
-        /// <summary>
-        /// 初始化旧历
-        /// </summary>
         private void InitOldCalendar()
         {
             cbYesrSky.SelectedIndex = cc.YearSky;
@@ -186,12 +228,8 @@ namespace DouNamespace
             if (cbMonth.Items.Count > 0) cbMonth.SelectedItem = cc.ChineseMonth;
             if (cbDay.Items.Count > 0) cbDay.SelectedItem = cc.ChineseDay;
             if (cbHour.Items.Count > 0) cbHour.SelectedIndex = 0;
-
         }
 
-        /// <summary>
-        /// 初始化新历
-        /// </summary>
         private void InitNewCalendar()
         {
             nudNewHour.Value = dt.Hour;
@@ -201,7 +239,6 @@ namespace DouNamespace
             if (cbNewYear.Items.Count > 0) cbNewYear.SelectedItem = dt.Year;
             if (cbNewMonth.Items.Count > 0) cbNewMonth.SelectedItem = dt.Month;
             if (cbNewDay.Items.Count > 0) cbNewDay.SelectedItem = dt.Day;
-            
         }
 
         public void DisplayChineseDate()
@@ -210,7 +247,6 @@ namespace DouNamespace
             dt = Convert.ToDateTime(cbNewYear.SelectedItem.ToString() + "-" + cbNewMonth.SelectedItem.ToString() + "-" + cbNewDay.SelectedItem.ToString());
             cc = new ChineseCalendar(dt);
             InitOldCalendar();
-
         }
 
         public int Vaildate()
@@ -251,94 +287,22 @@ namespace DouNamespace
         private void nudHour_ValueChanged(object sender, EventArgs e)
         {
             if (cbHour.Items.Count == 0) return;
-            int ihour = Convert.ToInt32(nudNewHour.Value);
-            switch (ihour)
-            {
-                case 0:
-                    cbHour.SelectedIndex = 0;
-                    break;
-                case 1:
-                case 2:
-                    cbHour.SelectedIndex = 1;
-                    break;
-                case 3:
-                case 4:
-                    cbHour.SelectedIndex = 2;
-                    break;
-                case 5:
-                case 6:
-                    cbHour.SelectedIndex = 3;
-                    break;
-                case 7:
-                case 8:
-                    cbHour.SelectedIndex = 4;
-                    break;
-                case 9:
-                case 10:
-                    cbHour.SelectedIndex = 5;
-                    break;
-                case 11:
-                case 12:
-                    cbHour.SelectedIndex = 6;
-                    break;
-                case 13:
-                case 14:
-                    cbHour.SelectedIndex = 7;
-                    break;
-                case 15:
-                case 16:
-                    cbHour.SelectedIndex = 8;
-                    break;
-                case 17:
-                case 18:
-                    cbHour.SelectedIndex = 9;
-                    break;
-                case 19:
-                case 20:
-                    cbHour.SelectedIndex = 10;
-                    break;
-                case 21:
-                case 22:
-                    cbHour.SelectedIndex = 11;
-                    break;
-                case 23:
-                    cbHour.SelectedIndex = 0;
-                    break;
-
-                default:
-                    break;
-            }
+            cbHour.SelectedIndex = UserPlateHelper.ConvertHourToIndex(Convert.ToInt32(nudNewHour.Value));
         }
 
         private void cbUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
             ListControl lc = (ListControl)sender;
 
-            User usr;
-            usr = UserList.FindByName(lc.Text);
+            User usr = UserList.FindByName(lc.Text);
+            if (usr == null) return;
 
-            this.tbName.Text = usr.Name;
-            this.cbSex.SelectedIndex = usr.Sex;
-            this.cbNewYear.Text = usr.Year.ToString();
-            this.cbNewMonth.Text = usr.Month.ToString();
-            this.cbNewDay.Text = usr.Day.ToString();
-            this.nudNewHour.Value = usr.Hour;
-            this.nudNewMinte.Value = usr.Minute;
-
+            ApplyUserToSidebar(usr);
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private User BuildUserFromSidebar(User existing)
         {
-            User usr;
-            //usr = UserList.FindByName(this.tbName.Text);
-            //if (UserList.IsExist(usr))
-            //{
-            //    MessageBox.Show("该用户已经存在");
-            //}
-            //else
-            //{
-            usr = new User();
-            usr.Id = UserList.GenerateUserID();
+            User usr = existing ?? new User();
             usr.Name = tbName.Text;
             usr.Sex = cbSex.SelectedIndex;
             usr.Year = Convert.ToInt32(cbNewYear.Text);
@@ -346,91 +310,118 @@ namespace DouNamespace
             usr.Day = Convert.ToInt32(cbNewDay.Text);
             usr.Hour = Convert.ToInt32(nudNewHour.Value);
             usr.Minute = Convert.ToInt32(nudNewMinte.Value);
+            return usr;
+        }
 
-            UserList.Add(usr);
-            //}   
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(tbName.Text))
+            {
+                MessageBox.Show("请输入姓名", "无效", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-            this.LoadUserList();
+            User selectedUser = GetSelectedUser();
+            User sameNameUser = UserList.FindByName(tbName.Text);
 
+            if (selectedUser != null)
+            {
+                User usr = BuildUserFromSidebar(selectedUser);
+                if (sameNameUser != null && sameNameUser.Id != usr.Id)
+                {
+                    MessageBox.Show("该姓名已被其他用户使用", "无效", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                UserList.Update(usr);
+            }
+            else if (sameNameUser != null)
+            {
+                MessageBox.Show("该用户已经存在", "无效", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else
+            {
+                User usr = BuildUserFromSidebar(null);
+                UserList.Add(usr);
+            }
+
+            RefreshUserList();
             MessageBox.Show("保存成功.", "消息");
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            using (SQLiteConnection cn = new SQLiteConnection( "Data Source=Test.db3;Pooling=true;FailIfMissing=false"))
+            User usr = GetSelectedUser();
+            if (usr == null)
             {
-                //在打开数据库时，会判断数据库是否存在，如果不存在，则在当前目录下创建一个
-                cn.Open();
-
-                using (SQLiteCommand cmd = new SQLiteCommand())
-                {
-                    cmd.Connection = cn;
-
-                    //建立表，如果表已经存在，则报错
-                    cmd.CommandText = "CREATE TABLE [test] (id int, name nvarchar(20))";
-                    cmd.ExecuteNonQuery();
-
-                    //插入测试数据
-                    for (int i = 2; i < 5; i++)
-                    {
-                        cmd.CommandText = string.Format("INSERT INTO [test] VALUES ({0}, '中文测试')", i);
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    for (int i = 5; i < 10; i++)
-                    {
-                        cmd.CommandText = string.Format("INSERT INTO [test] VALUES ({0}, 'English Test')", i);
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    //读取数据
-                    cmd.CommandText = "SELECT * FROM [test]";
-                    using (SQLiteDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection))
-                    {
-                        while (dr.Read())
-                        {
-                            Console.WriteLine("第{0} 条：{1}", dr.GetValue(0), dr.GetString(1));
-                        }
-                    }
-                }
+                MessageBox.Show("请先选择要删除的用户", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
 
-            User usr;
-            if (this.cbUsers.Text == "") return;
-
-            if (MessageBox.Show(this, "Do you want to delete the user ?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show(this, "确定要删除该用户吗？", "删除", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                usr = UserList.FindByName(this.cbUsers.Text);
-                if (usr != null) UserList.Delete(usr.Id);
-
-                LoadUserList();
+                UserList.Delete(usr.Id);
+                RefreshUserList();
             }
         }
 
-     
         private void addUserToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmUserInfo frmUserinfo = new frmUserInfo();
-            frmUserinfo.ShowDialog();
+            if (frmUserinfo.ShowDialog() == DialogResult.OK)
+            {
+                RefreshUserList();
+            }
         }
 
         private void modifyUserToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            User usr = new User();
+            User usr = GetSelectedUser();
+            if (usr == null)
+            {
+                MessageBox.Show("请先选择要修改的用户", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
-            frmUserInfo frmUserinfo = new frmUserInfo();
-            frmUserinfo.LoadData(usr);
-            frmUserinfo.ShowDialog();
+            EditUser(usr);
         }
 
         private void delUserToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "Do you want to delete the user ?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            User usr = GetSelectedUser();
+            if (usr == null)
             {
-                User usr;
-                usr = UserList.FindByName(this.cbUsers.Text);
-                if (usr != null) UserList.Delete(usr.Id);
+                MessageBox.Show("请先选择要删除的用户", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
+
+            if (MessageBox.Show(this, "确定要删除该用户吗？", "删除", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                UserList.Delete(usr.Id);
+                RefreshUserList();
+            }
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                button3_Click(sender, e);
+            }
+        }
+
+        private void 打开ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            User user = GetSelectedUser();
+            if (user == null)
+            {
+                MessageBox.Show("请先选择要打开的会员", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            ApplyUserToSidebar(user);
+            btnGo_Click(sender, e);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -444,6 +435,79 @@ namespace DouNamespace
             MessageBox.Show("建设中");
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            _searchField = comboBox3.SelectedItem != null ? comboBox3.SelectedItem.ToString() : "姓名";
+            _searchKeyword = textBox1.Text;
+            RefreshUserList();
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node == null) return;
+            _filterGroup = e.Node.Text;
+            RefreshUserList();
+        }
+
+        private void dgvUserInfoList_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            User user = dgvUserInfoList.Rows[e.RowIndex].DataBoundItem as User;
+            if (user == null) return;
+
+            string columnName = dgvUserInfoList.Columns[e.ColumnIndex].Name;
+            if (columnName == "sex")
+            {
+                if (user.Sex >= 0 && user.Sex < DouSource.SEX.Length)
+                    e.Value = DouSource.SEX[user.Sex];
+                e.FormattingApplied = true;
+            }
+            else if (columnName == "Column1")
+            {
+                e.Value = UserPlateHelper.GetSolarBirthdayText(user);
+                e.FormattingApplied = true;
+            }
+            else if (columnName == "Column2")
+            {
+                e.Value = UserPlateHelper.GetLunarBirthdayText(user);
+                e.FormattingApplied = true;
+            }
+            else if (columnName == "Column3")
+            {
+                e.Value = UserPlateHelper.GetPalaceEarth(user, 0);
+                e.FormattingApplied = true;
+            }
+            else if (columnName == "Column4")
+            {
+                e.Value = UserPlateHelper.GetPalaceEarth(user, 2);
+                e.FormattingApplied = true;
+            }
+            else if (columnName == "ColumnGroup")
+            {
+                e.Value = string.IsNullOrEmpty(user.Group) ? "未分组" : user.Group;
+                e.FormattingApplied = true;
+            }
+        }
+
+        private void dgvUserInfoList_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            if (dgvUserInfoList.Columns[e.ColumnIndex].Name != "Column5") return;
+
+            User user = dgvUserInfoList.Rows[e.RowIndex].DataBoundItem as User;
+            EditUser(user);
+        }
+
+        private void dgvUserInfoList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            if (dgvUserInfoList.Columns[e.ColumnIndex].Name == "Column5") return;
+
+            User user = dgvUserInfoList.Rows[e.RowIndex].DataBoundItem as User;
+            EditUser(user);
+        }
+
         private void btnGoForLiuYear_Click(object sender, EventArgs e)
         {
             int year;
@@ -453,7 +517,6 @@ namespace DouNamespace
             year = Convert.ToInt32(cbLiuYear.Text);
             yearEarth = cc.GetYearEarth(year);
 
-        
             cnt = p.GetIDForLifeZone() - yearEarth;
 
             for (int i = 0; i < p.zone_list.Count; i++)
@@ -464,19 +527,16 @@ namespace DouNamespace
                 }
                 else
                 {
-                    p.zone_list[i].dou = DouUtility.DeasilCountZone(p.zone_list[i].dou,Math.Abs( cnt));
+                    p.zone_list[i].dou = DouUtility.DeasilCountZone(p.zone_list[i].dou, Math.Abs(cnt));
                 }
             }
 
             p.LiuYearSky = cc.GetYearSky(Convert.ToInt32(this.cbLiuYear.SelectedItem));
             p.SetLiuYao();
 
-
             ucDouYear.LoadInfo(this.p);
             ucDouYear.DisplayBodyPlate();
             ucDouYear.DisplayAllLiuYao();
         }
-
-       
     }
 }
